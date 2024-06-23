@@ -1,9 +1,8 @@
 import Transaction from "../models/transaction.model.js";
-import Transaction from "../models/transaction.model.js";
 
 const transactionResolver = {
     Query:{
-      trasnactions: async (_,_,context) =>{
+        transactions: async (_,__,context) =>{
         try {
             if (!context.getUser()) throw new Error("Unauthorized");
 
@@ -18,7 +17,7 @@ const transactionResolver = {
         }
       },
 
-      trasnaction: async (_,{transactionId}) =>{
+      transaction: async (_,{transactionId}) =>{
         try {
             const transaction = await Transaction.findById(transactionId);
             return transaction;

@@ -182,6 +182,7 @@ const TransactionPage = () => {
 				</button>
 			</form>
 		</div>
+		
 	);
 };
 export default TransactionPage;

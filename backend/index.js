@@ -27,7 +27,7 @@ const httpServer =  http.createServer(app);
 const MongoDBStore = connectMongo(session);
 
 const store = new MongoDBStore({
-  uri: process.env.MONGO_URL,
+  uri: process.env.MONGO_URI,
   collection:"sessions",
 });
 
@@ -60,21 +60,22 @@ const server = new ApolloServer({
 await server.start();
 
 app.use(
-    '/graphql',
+    "/graphql",
     cors({
-      origin: "http;//localhost:3000",
+      origin: "http://localhost:3000", 
       credentials: true,
     }),
     express.json(),
     // expressMiddleware accepts the same arguments:
     // an Apollo Server instance and optional configuration options
     expressMiddleware(server, {
-      context: async ({ req }) =>buildContext({ req, res, User })
+      context: async ({ req, res}) =>buildContext({ req, res })
     }),
   );
   
   // Modified server startup
   await new Promise((resolve) => httpServer.listen({ port: 4000 }, resolve));
+  
   await connectDB();
 
-console.log(`Server started at http://localhost:4000/`);
+  console.log(`🚀 Server ready at http://localhost:4000/graphql`);
