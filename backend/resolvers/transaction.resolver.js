@@ -34,7 +34,6 @@ const transactionResolver = {
             try {
                 if (!context.getUser()) throw new Error("Unauthorized");
                 const {description, paymentType, category, amount,date,location} = input;
-
                 if(!description || !paymentType  || !category || !amount || !date ){
                     throw new Error("All fields are required");
                 }
@@ -80,9 +79,9 @@ const transactionResolver = {
                     throw new Error("transactionId is required");
                 }
                 
-               const Transaction = await Transaction.findByIdAndDelete(transactionId);
+               const deleteTransaction = await Transaction.findByIdAndDelete(transactionId);
 
-               return Transaction;
+               return deleteTransaction;
 
             } catch (error) {
                 console.error("Error deleting trasnactions:",error);

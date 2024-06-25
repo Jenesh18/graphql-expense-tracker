@@ -24,7 +24,7 @@ import mongoose from "mongoose";
         type:Number,
         required:true,
     },
-    loaction:{
+    location:{
         type:String,
         default:"Unknown"
     },
