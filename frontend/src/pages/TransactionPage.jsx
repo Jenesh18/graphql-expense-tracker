@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { GET_TRANSACTION } from "../graphql/queries/transaction.query";
@@ -13,7 +13,9 @@ const TransactionPage = () => {
 		variables:{id:id},
 	});
     
-	const [updateTransaction,{loading:lodingUpdate}] = useMutation(UPDATE_TRANSACTION)
+	const [updateTransaction,{loading:lodingUpdate}] = useMutation(UPDATE_TRANSACTION,{
+		refetchQueries:["GetTransactionStatistics"]
+	})
 
 	console.log(data?.transaction?.description,"<<<<<")
 

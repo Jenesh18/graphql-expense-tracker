@@ -6,6 +6,7 @@ query GetAuthenticatedUser {
         _id
         username 
         name
+        profilePicture
     }
 }
 `

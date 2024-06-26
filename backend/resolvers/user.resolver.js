@@ -1,4 +1,5 @@
 import { users } from "../dummyData/data.js"
+import Transaction from "../models/transaction.model.js";
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 
@@ -18,8 +19,8 @@ const userResolver ={
       const salt = await bcrypt.genSalt(10);
       const hashedpassword = await bcrypt.hash(password,salt);
 
-      const boyProfilePic = `https://avtar.iram.liara.run/public/boy?username=${username}`
-      const girlProfilePic = `https://avtar.iram.liara.run/public/girl?username=${username}`
+      const boyProfilePic = `https://avatar.iran.liara.run/public/boy?username=${username}`
+      const girlProfilePic = `https://avatar.iran.liara.run/public/girl?username=${username}`
 
       const newUser = new User({
         username,
@@ -100,8 +101,21 @@ const userResolver ={
         throw new Error(error.message || "Internal server error");
       }
     }
- }
- // TODO => ADD USER/TRANSACTION RELATION
+ },
+ User: {
+		transactions: async (parent) => {
+			try {
+				const transactions = await Transaction.find({ userId: parent._id });
+				return transactions;
+			} catch (err) {
+				console.log("Error in user.transactions resolver: ", err);
+				throw new Error(err.message || "Internal server error");
+			}
+		},
+	},
+ 
+ 
+
 }
 
 export default userResolver ;

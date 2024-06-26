@@ -1,8 +1,9 @@
 import Transaction from "../models/transaction.model.js";
+import User from "../models/user.model.js";
 
 const transactionResolver = {
     Query:{
-        transactions: async (_,__,context) =>{
+      transactions: async (_,__,context) =>{
         try {
             if (!context.getUser()) throw new Error("Unauthorized");
 
@@ -25,9 +26,27 @@ const transactionResolver = {
             console.error("Error getting trasnaction:",error);
             throw new Error("Error getting trasnaction:");  
         }
-      } 
+      },
 
-      // TODO => ADD catagoryStatics
+      categoryStatistics: async (_, __, context) => {
+			if (!context.getUser()) throw new Error("Unauthorized");
+
+			const userId = context.getUser()._id;
+			const transactions = await Transaction.find({ userId });
+			const categoryMap = {};
+
+			transactions.forEach((transaction) => {
+				if (!categoryMap[transaction.category]) {
+					categoryMap[transaction.category] = 0;
+				}
+				categoryMap[transaction.category] += transaction.amount;
+			});
+
+			return Object.entries(categoryMap).map(([category, totalAmount]) => ({ category, totalAmount }));
+			
+		},
+
+
     },
     Mutation:{
         createTransaction: async (_,{input},context) =>{
@@ -50,6 +69,7 @@ const transactionResolver = {
                 throw new Error("Error creating trasnactions:");  
             }
         },
+
         updateTransaction: async (_,{input},context) =>{
             try {
 
@@ -60,9 +80,9 @@ const transactionResolver = {
                     throw new Error("transactionId is required");
                 }
                 
-               const Transaction = await Transaction.findByIdAndUpdate(transactionId,input,{new:true});
+               const updateTransaction = await Transaction.findByIdAndUpdate(transactionId,input,{new:true});
 
-               return Transaction;
+               return updateTransaction;
 
             } catch (error) {
                 console.error("Error upadting trasnactions:",error);
@@ -88,9 +108,22 @@ const transactionResolver = {
                 throw new Error("Error deleting trasnactions:");  
             }
         },
+       
+    },
+    Transaction: {
+		user: async (parent) => {
+			const userId = parent.userId;
+			try {
+				const user = await User.findById(userId);
+				return user;
+			} catch (err) {
+				console.error("Error getting user:", err);
+				throw new Error("Error getting user");
+			}
+		},
+	},
+    
 
-        // Todo => add transaction/user relationship 
-    }
 };
 
 export default transactionResolver;

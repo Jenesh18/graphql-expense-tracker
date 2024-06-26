@@ -12,7 +12,7 @@ query GetTransactions {
     paymentType
   }
 }
-`
+`;
 
 export const GET_TRANSACTION = gql`
 query Query($id: ID!) {
@@ -26,4 +26,12 @@ query Query($id: ID!) {
     paymentType
   }
 }
-`
+`;
+export const GET_TRANSACTION_STATISTICS = gql`
+	query GetTransactionStatistics {
+		categoryStatistics {
+			category
+			totalAmount
+		}
+	}
+`;
